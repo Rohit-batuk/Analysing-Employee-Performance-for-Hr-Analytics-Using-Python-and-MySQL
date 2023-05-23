@@ -1,0 +1,90 @@
+Write  SQL queries to solve the given problem statements.
+
+Find the average age of employees in each department and gender group. ( Round average  age up to two decimal places if needed)
+
+Select department, gender, round(avg(age),2) as avg_age
+from employee
+group by department,gender
+
+
+List the top 3 departments with the highest average training scores. ( Round average scores up to two decimal places if needed)
+
+select department , ROUND(AVG(avg_training_score),2) as avg_training_score
+from employee
+group by department
+ order by avg_training_score DESC
+ limit 3;
+
+Find the percentage of employees who have won awards in each region. (Round percentages up to two decimal places if needed)
+
+SELECT       region,
+format (COUNT(*)*100/(SELECT sum(awards_won) from employee), 2) as award_percentage
+FROM employee where awards_won != 0 group by region;
+ 
+Show the number of employees who have met more than 80% of KPIs for each recruitment channel and education level.
+
+select recruitment_channel, education, COUNT(*) as num_employees
+from employee
+where KPIs_met_more_than_80 = '1'
+group by recruitment_channel, education;
+
+Find the average length of service for employees in each department, 
+considering only employees with previous year ratings greater than or equal to 4. ( Round average length up to two decimal places if needed)
+
+select department, round(avg(length_of_service),2) as avg_length_of_service
+from employee
+where previous_year_rating >= 4
+group by department
+
+
+List the top 5 regions with the highest average previous year ratings. ( Round average ratings up to two decimal places if needed)
+
+select region, round(avg(previous_year_Rating),2) as avg_rating
+from employee
+group by region
+order by avg_rating desc
+ limit 5;
+ 
+
+List the departments with more than 100 employees having a length of service greater than 5 years.
+
+select department , count(employee_id) as employee_count
+from employee
+where length_of_service > 5
+group by department
+having count(employee_id) > 100;
+
+
+Show the average length of service for employees who have attended more than 3 trainings, grouped by department and gender.
+( Round average length up to two decimal places if needed)
+
+select department, gender, 
+round(avg(length_of_service),2) as avg_length_of_service
+from employee
+where no_of_trainings > 3
+group by department, gender;
+
+
+Find the percentage of female employees who have won awards, per department. Also show the number of female employees who won awards and total female employees. 
+( Round percentage up to two decimal places if needed)
+
+select department,
+sum(case when awards_won =1 then 1 else 0 end) as female_award_winners,
+count(case when gender = 'F' then employee_id end) as total_female_employees,
+round(sum(case when awards_won = 1 then 1 else 0 end) * 100 / count(case when gender = 'F' then employee_id end),2) as female_award_percentage
+from employee
+where gender = 'F'
+group by department
+
+
+Calculate the percentage of employees per department who have a length of service between 5 and 10 years. ( Round percentage up to two decimal places if needed)
+select department,
+round(count(case when length_of_service >= 5 and length_of_service <= 10 then employee_id end)*100 / count(employee_id),2) as service_percentage
+from employee
+group by department;
+
+
+
+
+
+
